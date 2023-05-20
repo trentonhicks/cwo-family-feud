@@ -56,13 +56,9 @@ watch(() => props.answer.revealed, (revealed) => {
         class="relative"
         style="transform-style: preserve-3d;"
         ref="button">
-        
         <SurveyButtonTop class="layer top" />
-        
         <SurveyButtonBack class="layer back">{{ answer.text }}</SurveyButtonBack>
-        
         <SurveyButtonFront class="layer front">{{ index + 1 }}</SurveyButtonFront>
-        
         <SurveyButtonParentSizer />
     </button>
 </template>
