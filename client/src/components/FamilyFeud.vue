@@ -6,7 +6,6 @@ import teamsData from '../data/teamsData';
 import Teams from './Teams.vue';
 import SurveyBoard from './SurveyBoard.vue';
 import Strikes from './Strikes.vue';
-import themeSongUrl from '../assets/sounds/ThemeSong.mp3';
 import revealAnswerSoundUrl from '../assets/sounds/AnswerReveal.mp3';
 import applauseUrl from '../assets/sounds/Applause.mp3';
 import strikeSoundUrl from '../assets/sounds/Strike.mp3';
@@ -19,13 +18,43 @@ const activeQuestionIndex = ref(0);
 const showStrikes = ref(false);
 const gameStarted = ref(false);
 const applauseActive = ref(false);
+const gameEnded = ref(false);
+const gameWinner = ref<number | null>(null);
+
+function setTeam(teamIndex: number, teamName: string) {
+  teams[teamIndex].name = teamName;
+}
 
 function startGame() {
   gameStarted.value = true;
-  const themeSong = new Audio(themeSongUrl);
-  themeSong.volume = 0.2;
-  themeSong.loop = true;
-  themeSong.play();
+}
+
+function endGame() {
+  gameWinner.value = teams[0].score === teams[1].score
+    ? null
+    : teams[0].score > teams[1].score
+    ? 0 : 1;
+  
+    gameEnded.value = true;
+}
+
+function resetGame() {
+  gameStarted.value = false;
+  gameEnded.value = false;
+  gameWinner.value = null;
+  activeTeamIndex.value = 0;
+  activeQuestionIndex.value = 0;
+
+  teams.forEach((team, index) => {
+    team.score = 0;
+    teamStrikes[index] = 0;
+  });
+
+  questionsAndAnswers.forEach((questionAndAnswers) => {
+    questionAndAnswers.answers.forEach(answer => {
+      answer.revealed = false;
+    });
+  });
 }
 
 function selectTeam(teamIndex: number) {
@@ -110,6 +139,10 @@ onMounted(() => {
       case 'KeyX':
         addStrike();
         break;
+
+      case 'KeyQ':
+        endGame();
+        break;
     }
   });
 })
@@ -117,11 +150,49 @@ onMounted(() => {
 
 <template>
   <div class="p-5">
-    <div v-if="!gameStarted" class="flex items-center justify-center gap-10 h-screen">
-      <div class="text-center flex flex-col items-center gap-16">
-        <h1 class="text-9xl font-bold">Cornerstone Feud</h1>
-        <button class="text-7xl px-12 py-5 bg-blue-500 text-white font-bold rounded-lg" @click="startGame">Start Game</button>
+    <div v-if="!gameStarted" class="flex items-center justify-center h-screen">
+      <div>
+        <h1 class="text-7xl font-bold mb-10">Cornerstone Feud</h1>
+        <form class="flex flex-col gap-7" @submit="(event) => {
+          event.preventDefault();
+          startGame();
+        }">
+          <div class="flex flex-col gap-y-3">
+            <label for="team1" class="font-bold text-3xl">Team 1</label>
+            <input
+              id="team1"
+              type="text"
+              class="text-2xl border-2 border-gray-300 px-3 py-3 rounded-md"
+              @input="(event: any) => setTeam(0, event.currentTarget.value)"
+              :value="teams[0].name"
+            />
+          </div>
+          <div class="flex flex-col gap-y-3">
+            <label for="team2" class="font-bold text-3xl">Team 2</label>
+            <input
+              id="team2"
+              type="text"
+              class="text-2xl border-2 border-gray-300 px-3 py-3 rounded-md"
+              @input="(event: any) => setTeam(1, event.currentTarget.value)"
+              :value="teams[1].name"
+            />
+          </div>
+          <button
+            class="text-4xl px-10 py-5 bg-blue-500 text-white font-bold rounded-lg disabled:bg-gray-500"
+            type="submit"
+            :disabled="teams[0].name === '' || teams[1].name === ''"
+          >
+              Start Game
+          </button>
+        </form>
       </div>
+    </div>
+    <div v-else-if="gameEnded" class="flex flex-col items-center justify-center gap-y-10 h-screen">
+      <div class="text-6xl font-bold">
+        <h2 v-if="gameWinner === null">{{ teams[0].name }} and {{ teams[1].name }} tied!</h2>
+        <h2 v-else>{{ teams[gameWinner].name }} won!</h2>
+      </div>
+      <button class="text-4xl px-10 py-5 bg-blue-500 text-white font-bold rounded-lg" @click="resetGame">Play Again</button>
     </div>
     <div class="grid gap-y-3" v-else>
       <Teams
