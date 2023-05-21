@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "FamilyFeud";
+    src: url("./assets/fonts/clarenbd.ttf");
+}
+
+@font-face {
+    font-family: "Bebas";
+    src: url("./assets/fonts/bebas.ttf");
+}

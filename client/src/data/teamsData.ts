@@ -2,11 +2,11 @@ import Team from "../types/Team";
 
 export default new Array<Team>(
     {
-        name: '',
+        name: 'Team 1',
         score: 0,
     },
     {
-        name: '',
+        name: 'Team 2',
         score: 0,
     },
 )

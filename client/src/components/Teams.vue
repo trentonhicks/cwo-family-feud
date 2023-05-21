@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Team from '../types/Team';
+import TeamScore from './TeamScore.vue';
 
 defineProps<{ teams: Team[], activeTeamIndex: number }>();
 const emit = defineEmits<{ selected: [teamIndex: number] }>();
@@ -19,5 +20,6 @@ const emit = defineEmits<{ selected: [teamIndex: number] }>();
         <h2 class="text-xl font-bold">{{ team.name }}</h2>
         <p class="text-lg font-semibold">{{ team.score }}</p>
       </button>
+      <TeamScore />
     </div>
 </template>
