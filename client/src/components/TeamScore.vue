@@ -4,7 +4,7 @@ defineProps<{ active: boolean, team: Team }>();
 </script>
 
 <template>
-    <button class="grid gap-[5%] w-[45%] mx-auto">
+    <button class="grid gap-y-[5%] gap-x-[15%] w-[45%] mx-auto">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 709.36 158.93">
             <defs>
                 <radialGradient id="radial-gradient-team-active" cx="354.68" cy="79.05" fx="354.68" fy="79.05" r="538.76" gradientUnits="userSpaceOnUse">

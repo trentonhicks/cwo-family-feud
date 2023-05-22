@@ -1,7 +1,9 @@
 <template>
-<div class="relative">
+<div class="relative z-10">
   <div class="absolute inset-0 w-full h-full z-10">
-    <slot />
+    <div class="grid gap-y-[3%] my-auto pt-[5%] w-[77.5%] mx-auto">
+      <slot />
+    </div>
   </div>
   <svg class="origin-top translate-y-[-2%]" id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 3731.43 2723.68">
   <defs>

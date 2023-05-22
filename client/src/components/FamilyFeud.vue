@@ -9,6 +9,7 @@ import Strikes from './Strikes.vue';
 import revealAnswerSoundUrl from '../assets/sounds/AnswerReveal.mp3';
 import applauseUrl from '../assets/sounds/Applause.mp3';
 import strikeSoundUrl from '../assets/sounds/Strike.mp3';
+import videoUrl from '../assets/videos/1.mp4';
 import LightOval from './LightOval.vue';
 
 const questionsAndAnswers = reactive(questionsAndAnswersData);
@@ -188,6 +189,7 @@ onMounted(() => {
         </form>
       </div>
     </div>
+
     <div v-else-if="gameEnded" class="flex flex-col items-center justify-center gap-y-10 h-screen">
       <div class="text-6xl font-bold">
         <h2 v-if="gameWinner === null">{{ teams[0].name }} and {{ teams[1].name }} tied!</h2>
@@ -195,9 +197,9 @@ onMounted(() => {
       </div>
       <button class="text-4xl px-10 py-5 bg-blue-500 text-white font-bold rounded-lg" @click="resetGame">Play Again</button>
     </div>
+
     <div v-else>
       <LightOval>
-        <div class="grid gap-y-[3%] my-auto pt-[5%] w-[77.5%] mx-auto">
         <Teams
           :teams="teams"
           :active-team-index="activeTeamIndex"
@@ -208,8 +210,11 @@ onMounted(() => {
           :answers="questionsAndAnswers[activeQuestionIndex].answers"
           @reveal="revealAnswer"
         />
-        </div>
       </LightOval>
+
+      <figure class="fixed inset-0 z-0 object-cover object-center object-center bg-orange-300">
+        <video :src="videoUrl" loop="true" class="object-cover w-full h-full" autoplay muted style="mix-blend-mode: luminosity;"></video>
+      </figure>
 
       <transition @enter="animateStrikeIn" @leave="animateStrikeOut" appear>
         <Strikes :count="teamStrikes[activeTeamIndex]" v-if="showStrikes" />
