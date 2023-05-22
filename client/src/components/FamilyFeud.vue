@@ -9,6 +9,7 @@ import Strikes from './Strikes.vue';
 import revealAnswerSoundUrl from '../assets/sounds/AnswerReveal.mp3';
 import applauseUrl from '../assets/sounds/Applause.mp3';
 import strikeSoundUrl from '../assets/sounds/Strike.mp3';
+import LightOval from './LightOval.vue';
 
 const questionsAndAnswers = reactive(questionsAndAnswersData);
 const teams = reactive(teamsData);
@@ -149,7 +150,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-screen w-10/12 mx-auto">
+  <div class="h-screen overflow-hidden">
     <div v-if="!gameStarted" class="flex items-center justify-center h-screen">
       <div>
         <h1 class="text-7xl font-bold mb-10 font-feud uppercase">Cornerstone Feud</h1>
@@ -194,17 +195,21 @@ onMounted(() => {
       </div>
       <button class="text-4xl px-10 py-5 bg-blue-500 text-white font-bold rounded-lg" @click="resetGame">Play Again</button>
     </div>
-    <div class="grid gap-y-[3%] my-auto pt-14" v-else>
-      <Teams
-        :teams="teams"
-        :active-team-index="activeTeamIndex"
-        @selected="selectTeam"
-      />
+    <div v-else>
+      <LightOval>
+        <div class="grid gap-y-[3%] my-auto pt-[5%] w-[77.5%] mx-auto">
+        <Teams
+          :teams="teams"
+          :active-team-index="activeTeamIndex"
+          @selected="selectTeam"
+        />
 
-      <SurveyBoard
-        :answers="questionsAndAnswers[activeQuestionIndex].answers"
-        @reveal="revealAnswer"
-      />
+        <SurveyBoard
+          :answers="questionsAndAnswers[activeQuestionIndex].answers"
+          @reveal="revealAnswer"
+        />
+        </div>
+      </LightOval>
 
       <transition @enter="animateStrikeIn" @leave="animateStrikeOut" appear>
         <Strikes :count="teamStrikes[activeTeamIndex]" v-if="showStrikes" />
