@@ -1,5 +1,10 @@
+<script setup lang="ts">
+import Team from '../types/Team';
+defineProps<{ active: boolean, team: Team }>();
+</script>
+
 <template>
-    <div>
+    <button class="grid gap-[5%] w-2/6 mx-auto">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 709.36 158.93">
             <defs>
                 <radialGradient id="radial-gradient-team-active" cx="354.68" cy="79.05" fx="354.68" fy="79.05" r="538.76" gradientUnits="userSpaceOnUse">
@@ -17,28 +22,36 @@
                     <rect class="cls-2" x="5" y="5" width="699.36" height="148.1"/>
                     <rect class="cls-1" x="5" y="5" width="699.36" height="148.1"/>
                     <rect class="cls-3" x="10.12" y="9.55" width="688.29" height="139.55"/>
+                    <rect :class="[
+                        'team-inactive-class-1 transition-opacity duration-300',
+                        active ? 'opacity-0' : 'opacity-1'
+                      ]"
+                      x="5"
+                      y="5"
+                      width="699.01"
+                      height="148.1"
+                    />
                     <g>
                     <g>
-                        <text class="cls-4 font-bebas text-uppercase" x="50%" y="50%" alignment-baseline="middle" text-anchor="middle">Team 2</text>
+                        <text
+                          :class="{ 'cls-4 font-bebas text-uppercase transition-colors duration-300': true, 'fill-white': !active }"
+                          x="50%"
+                          y="50%"
+                          alignment-baseline="middle"
+                          text-anchor="middle">{{ team.name }}</text>
                     </g>
                     </g>
                 </g>
                 </g>
             </g>
         </svg>
-        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 709.01 170.93">
-            <g class="team-inactive-class-5">
-                <g id="Layer_2" data-name="Layer 2">
-                <g id="Layer_1-2" data-name="Layer 1">
-                    <rect class="team-inactive-class-1" x="5" y="5" width="699.01" height="148.1"/>
-                    <g>
-                    <text class="team-inactive-class-3 font-bebas" x="50%" y="47%" alignment-baseline="middle" text-anchor="middle">Team 2</text>
-                    </g>
-                </g>
-                </g>
-            </g>
+        <svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 481.38 209.93" class="w-9/12 mx-auto">
+          <g id="Layer_1-2" data-name="Layer 1">
+            <rect class="score-box-class-2" x="5" y="5" width="471.38" height="199.93"/>
+            <text class="score-box-class-5" alignment-baseline="middle" text-anchor="middle" x="50%" y="50%">{{ team.score }}</text>
+          </g>
         </svg>
-    </div>
+    </button>
 </template>
 
 <style scoped>
@@ -106,5 +119,30 @@
       .team-inactive-class-6 {
         mix-blend-mode: multiply;
         opacity: .75;
+      }
+
+      .score-box-class-1 {
+        letter-spacing: 0em;
+      }
+
+      .score-box-class-2 {
+        fill: #21409a;
+        stroke: #000;
+        stroke-miterlimit: 10;
+        stroke-width: 10px;
+      }
+
+      .score-box-class-3 {
+        letter-spacing: .02em;
+      }
+
+      .score-box-class-4 {
+        letter-spacing: .02em;
+      }
+
+      .score-box-class-5 {
+        fill: #fff;
+        font-family: Bebas, Bebas;
+        font-size: 150px;
       }
     </style>

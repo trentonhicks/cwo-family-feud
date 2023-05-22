@@ -149,16 +149,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-5">
+  <div class="h-screen w-10/12 mx-auto">
     <div v-if="!gameStarted" class="flex items-center justify-center h-screen">
       <div>
-        <h1 class="text-7xl font-bold mb-10">Cornerstone Feud</h1>
+        <h1 class="text-7xl font-bold mb-10 font-feud uppercase">Cornerstone Feud</h1>
         <form class="flex flex-col gap-7" @submit="(event) => {
           event.preventDefault();
           startGame();
         }">
           <div class="flex flex-col gap-y-3">
-            <label for="team1" class="font-bold text-3xl">Team 1</label>
+            <label for="team1" class="text-3xl font-bold font-feud uppercase">Team 1</label>
             <input
               id="team1"
               type="text"
@@ -168,7 +168,7 @@ onMounted(() => {
             />
           </div>
           <div class="flex flex-col gap-y-3">
-            <label for="team2" class="font-bold text-3xl">Team 2</label>
+            <label for="team2" class="text-3xl font-bold font-feud uppercase">Team 2</label>
             <input
               id="team2"
               type="text"
@@ -178,7 +178,7 @@ onMounted(() => {
             />
           </div>
           <button
-            class="text-4xl px-10 py-5 bg-blue-500 text-white font-bold rounded-lg disabled:bg-gray-500"
+            class="text-4xl px-10 py-5 bg-blue-500 text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase"
             type="submit"
             :disabled="teams[0].name === '' || teams[1].name === ''"
           >
@@ -194,7 +194,7 @@ onMounted(() => {
       </div>
       <button class="text-4xl px-10 py-5 bg-blue-500 text-white font-bold rounded-lg" @click="resetGame">Play Again</button>
     </div>
-    <div class="grid gap-y-3" v-else>
+    <div class="grid gap-y-[3%] my-auto pt-14" v-else>
       <Teams
         :teams="teams"
         :active-team-index="activeTeamIndex"
