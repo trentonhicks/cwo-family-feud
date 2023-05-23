@@ -11,6 +11,7 @@ import applauseUrl from '../assets/sounds/Applause.mp3';
 import strikeSoundUrl from '../assets/sounds/Strike.mp3';
 import videoUrl from '../assets/videos/1.mp4';
 import LightOval from './LightOval.vue';
+import Logo from './Logo.vue';
 
 const questionsAndAnswers = reactive(questionsAndAnswersData);
 const teams = reactive(teamsData);
@@ -18,14 +19,14 @@ const teamStrikes = reactive([0, 0]);
 const activeTeamIndex = ref(0);
 const activeQuestionIndex = ref(0);
 const showStrikes = ref(false);
-const gameStarted = ref(true);
+const gameStarted = ref(false);
 const applauseActive = ref(false);
 const gameEnded = ref(false);
 const gameWinner = ref<number | null>(null);
 
-function setTeam(teamIndex: number, teamName: string) {
-  teams[teamIndex].name = teamName;
-}
+// function setTeam(teamIndex: number, teamName: string) {
+//   teams[teamIndex].name = teamName;
+// }
 
 function startGame() {
   gameStarted.value = true;
@@ -88,7 +89,7 @@ function resetStrikes() {
 }
 
 function addStrike() {
-  if (teamStrikes[activeTeamIndex.value] < 3) {
+  if (teamStrikes[activeTeamIndex.value] < 3 && gameStarted.value && !gameEnded.value) {
     teamStrikes[activeTeamIndex.value]++;
     showStrikes.value = true;
     
@@ -152,35 +153,15 @@ onMounted(() => {
 
 <template>
   <div class="h-screen overflow-hidden">
-    <div v-if="!gameStarted" class="flex items-center justify-center h-screen">
-      <div>
-        <h1 class="text-7xl font-bold mb-10 font-feud uppercase">Cornerstone Feud</h1>
+    <div v-if="!gameStarted" class="flex items-center justify-center h-screen relative z-10 text-white">
+      <div class="w-full px-[20%]">
+        <Logo class="mx-auto" />
         <form class="flex flex-col gap-7" @submit="(event) => {
           event.preventDefault();
           startGame();
         }">
-          <div class="flex flex-col gap-y-3">
-            <label for="team1" class="text-3xl font-bold font-feud uppercase">Team 1</label>
-            <input
-              id="team1"
-              type="text"
-              class="text-2xl border-2 border-gray-300 px-3 py-3 rounded-md"
-              @input="(event: any) => setTeam(0, event.currentTarget.value)"
-              :value="teams[0].name"
-            />
-          </div>
-          <div class="flex flex-col gap-y-3">
-            <label for="team2" class="text-3xl font-bold font-feud uppercase">Team 2</label>
-            <input
-              id="team2"
-              type="text"
-              class="text-2xl border-2 border-gray-300 px-3 py-3 rounded-md"
-              @input="(event: any) => setTeam(1, event.currentTarget.value)"
-              :value="teams[1].name"
-            />
-          </div>
           <button
-            class="text-4xl px-10 py-5 bg-blue-500 text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase"
+            class="text-3xl px-10 py-3 max-w-fit mx-auto bg-[#21409a] text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase"
             type="submit"
             :disabled="teams[0].name === '' || teams[1].name === ''"
           >
@@ -190,12 +171,12 @@ onMounted(() => {
       </div>
     </div>
 
-    <div v-else-if="gameEnded" class="flex flex-col items-center justify-center gap-y-10 h-screen">
-      <div class="text-6xl font-bold">
+    <div v-else-if="gameEnded" class="flex flex-col items-center justify-center gap-y-10 h-screen relative z-10">
+      <div class="text-6xl font-bold text-white font-feud">
         <h2 v-if="gameWinner === null">{{ teams[0].name }} and {{ teams[1].name }} tied!</h2>
         <h2 v-else>{{ teams[gameWinner].name }} won!</h2>
       </div>
-      <button class="text-4xl px-10 py-5 bg-blue-500 text-white font-bold rounded-lg" @click="resetGame">Play Again</button>
+      <button class="text-3xl px-10 py-3 bg-[#21409a] text-white font-bold rounded-lg uppercase font-feud" @click="resetGame">Play Again</button>
     </div>
 
     <div v-else>
@@ -212,13 +193,13 @@ onMounted(() => {
         />
       </LightOval>
 
-      <figure class="fixed inset-0 z-0 object-cover object-center object-center bg-orange-300">
-        <video :src="videoUrl" loop="true" class="object-cover w-full h-full" autoplay muted style="mix-blend-mode: luminosity;"></video>
-      </figure>
-
       <transition @enter="animateStrikeIn" @leave="animateStrikeOut" appear>
         <Strikes :count="teamStrikes[activeTeamIndex]" v-if="showStrikes" />
       </transition>
     </div>
+
+    <figure class="fixed inset-0 z-0 object-cover object-center bg-orange-300">
+        <video :src="videoUrl" loop="true" class="object-cover w-full h-full" autoplay muted style="mix-blend-mode: luminosity;"></video>
+    </figure>
   </div>
 </template>
