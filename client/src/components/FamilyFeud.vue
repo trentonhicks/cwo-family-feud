@@ -25,9 +25,9 @@ const applauseActive = ref(false);
 const gameEnded = ref(false);
 const gameWinner = ref<number | null>(null);
 
-// function setTeam(teamIndex: number, teamName: string) {
-//   teams[teamIndex].name = teamName;
-// }
+function setTeam(teamIndex: number, teamName: string) {
+  teams[teamIndex].name = teamName;
+}
 
 function startGame() {
   gameStarted.value = true;
@@ -67,6 +67,12 @@ function selectTeam(teamIndex: number) {
 
 function revealAnswer(answerIndex: number) {
   if (teamStrikes[activeTeamIndex.value] === 3)
+    return;
+
+  if (questionsAndAnswers[activeQuestionIndex.value].answers[answerIndex] === undefined)
+    return;
+
+  if (questionsAndAnswers[activeQuestionIndex.value].answers[answerIndex].revealed)
     return;
 
   teams[activeTeamIndex.value].score++;
@@ -133,8 +139,43 @@ function animateStrikeOut(element: Element, done: any) {
     });
 }
 
+function animateScreenIn(element: HTMLElement, done: any) {
+  switch (element.dataset.screen) {
+    case 'startGame':
+      gsap.fromTo(element, { opacity: 0, }, { opacity: 1, duration: 0.5, ease: 'power1.out', onComplete: done });
+      break;
+
+    case 'startedGame':
+      gsap.fromTo(element, { y: '100%', }, { y: 0, duration: 1, ease: 'power3.out', onComplete: done });
+      break;
+
+    case 'endedGame':
+      gsap.fromTo(element, { scale: 0 }, { scale: 1, duration: 1, ease: 'bounce', onComplete: done });
+      break;
+  }
+}
+
+function animateScreenOut(element: HTMLElement, done: any) {
+  switch (element.dataset.screen) {
+    case 'startGame':
+      gsap.to(element, { opacity: 0, duration: 0.2, ease: 'power1.out', onComplete: done });
+      break;
+
+    case 'startedGame':
+      gsap.to(element, { y: '100%', opacity: 0, duration: 0.5, ease: 'power3.out', onComplete: done });
+      break;
+
+    case 'endedGame':
+      gsap.to(element, { opacity: 0, duration: 0.2, ease: 'power1.out', onComplete: done });
+      break;
+  }
+}
+
 onMounted(() => {
   document.addEventListener('keyup', (event) => {
+    if (!gameStarted.value || gameEnded.value)
+      return;
+
     switch(event.code) {
       case 'ArrowRight':
         nextQuestion();
@@ -147,6 +188,46 @@ onMounted(() => {
       case 'KeyQ':
         endGame();
         break;
+
+      case 'Digit9':
+        selectTeam(0);
+        break;
+
+      case 'Digit0':
+        selectTeam(1);
+        break;
+
+      case 'Digit1':
+        revealAnswer(0);
+        break;
+
+      case 'Digit2':
+        revealAnswer(1);
+        break;
+
+      case 'Digit3':
+        revealAnswer(2);
+        break;
+
+      case 'Digit4':
+        revealAnswer(3);
+        break;
+
+      case 'Digit5':
+        revealAnswer(4);
+        break;
+
+      case 'Digit6':
+        revealAnswer(5);
+        break;
+
+      case 'Digit7':
+        revealAnswer(6);
+        break;
+
+      case 'Digit8':
+        revealAnswer(7);
+        break;
     }
   });
 })
@@ -154,51 +235,101 @@ onMounted(() => {
 
 <template>
   <div class="h-screen overflow-hidden">
-    <div v-if="!gameStarted" class="flex items-center justify-center h-screen relative z-10 text-white">
-      <div class="w-full px-[20%]">
-        <Logo class="mx-auto" />
-        <form class="flex flex-col gap-7" @submit="(event) => {
-          event.preventDefault();
-          startGame();
-        }">
-          <button
-            class="text-3xl px-10 py-3 max-w-fit mx-auto transition-colors bg-[#007ee8]/30 hover:bg-[#007ee8]/100 backdrop-blur-lg border-8 border-[#5e9fff] text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase"
-            type="submit"
-            :disabled="teams[0].name === '' || teams[1].name === ''"
-          >
-              <div class="">Start Game</div>
-          </button>
-        </form>
+    <transition
+      @enter="(element, done) => animateScreenIn(element as HTMLElement, done)"
+      @leave="(element, done) => animateScreenOut(element as HTMLElement, done)"
+    >
+      <!-- Start Game -->
+      <div
+        v-if="!gameStarted"
+        class="flex items-center justify-center h-screen relative z-10 text-white"
+        data-screen="startGame"
+      >
+        <div class="w-full px-[25%] font-feud">
+          <Logo class="mx-auto" />
+          <form class="flex flex-col gap-5" @submit="(event) => {
+            event.preventDefault();
+            startGame();
+          }">
+            <div>
+              <label for="team-1" class="block max-w-fit font-medium leading-6 text-white text-3xl bg-black/30 backdrop-blur-lg py-3 px-5 rounded-md"
+              >
+                Team 1
+              </label>
+              <div class="mt-2">
+                <input
+                  type="text"
+                  name="team-1"
+                  id="team-1"
+                  class="block w-full text-3xl rounded-md border-0 px-5 py-3 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                  :value="teams[0].name"
+                  @input="(event) => setTeam(0, (event.target as HTMLInputElement).value)"
+                />
+              </div>
+            </div>
+            <div>
+              <label for="team-2" class="block max-w-fit bg-black/30 backdrop-blur-lg px-5 py-3 rounded-md text-white font-medium leading-6 text-3xl">Team 2</label>
+              <div class="mt-2">
+                <input
+                  type="text"
+                  name="team-2"
+                  id="team-2"
+                  class="text-gray-600 block w-full text-3xl rounded-md border-0 px-5 py-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                  :value="teams[1].name"
+                  @input="(event) => setTeam(1, (event.target as HTMLInputElement).value)"
+                />
+              </div>
+            </div>
+            <button
+              class="text-3xl px-10 py-3 max-w-fit mx-auto transition-colors bg-[#007ee8]/30 hover:bg-[#007ee8]/100 backdrop-blur-lg border-8 border-[#5e9fff] text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase"
+              type="submit"
+              :disabled="teams[0].name === '' || teams[1].name === ''"
+            >
+                <div class="">Start Game</div>
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
 
-    <div v-else-if="gameEnded" class="flex flex-col items-center justify-center gap-y-10 h-screen relative z-10">
-      <div class="text-6xl font-bold text-white font-feud">
-        <h2 v-if="gameWinner === null">{{ teams[0].name }} and {{ teams[1].name }} tied!</h2>
-        <h2 v-else>{{ teams[gameWinner].name }} won!</h2>
+      <!-- Started Game -->
+      <div 
+        v-else-if="!gameEnded"
+        class="relative z-10"
+        data-screen="startedGame"
+      >
+        <LightOval>
+          <Teams
+            :teams="teams"
+            :active-team-index="activeTeamIndex"
+            @selected="selectTeam"
+          />
+
+          <SurveyBoard
+            :answers="questionsAndAnswers[activeQuestionIndex].answers"
+            @reveal="revealAnswer"
+          />
+        </LightOval>
+
+        <transition @enter="animateStrikeIn" @leave="animateStrikeOut" appear>
+          <Strikes :count="teamStrikes[activeTeamIndex]" v-if="showStrikes" />
+        </transition>
       </div>
-      <button class="text-3xl px-10 py-3 bg-[#21409a] text-white font-bold rounded-lg uppercase font-feud" @click="resetGame">Play Again</button>
-    </div>
 
-    <div v-else>
-      <LightOval>
-        <Teams
-          :teams="teams"
-          :active-team-index="activeTeamIndex"
-          @selected="selectTeam"
-        />
+      <!-- Ended Game -->
+      <div
+        v-else
+        class="flex flex-col items-center justify-center gap-y-10 h-screen relative z-10"
+        data-screen="endedGame"
+      >
+        <div class="text-6xl font-bold text-white font-feud bg-black/30 backdrop-blur-lg px-20 py-10 border-2 shadow-inner border-[#FFE978] rounded-lg">
+          <h2 v-if="gameWinner === null">{{ teams[0].name }} and {{ teams[1].name }} tied!</h2>
+          <h2 v-else>{{ teams[gameWinner].name }} won!</h2>
+        </div>
+        <button class="text-3xl px-10 py-3 max-w-fit mx-auto transition-colors bg-[#007ee8]/30 hover:bg-[#007ee8]/100 backdrop-blur-lg border-8 border-[#5e9fff] text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase" @click="resetGame">Play Again</button>
+      </div>
+    </transition>
 
-        <SurveyBoard
-          :answers="questionsAndAnswers[activeQuestionIndex].answers"
-          @reveal="revealAnswer"
-        />
-      </LightOval>
-
-      <transition @enter="animateStrikeIn" @leave="animateStrikeOut" appear>
-        <Strikes :count="teamStrikes[activeTeamIndex]" v-if="showStrikes" />
-      </transition>
-    </div>
-
+    <!-- Video Backgrounds -->
     <figure
       class="fixed inset-0 z-0 object-cover object-center bg-orange-300"
       v-show="!gameStarted || gameEnded"

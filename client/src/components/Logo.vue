@@ -47,7 +47,7 @@
                     </g>
                 </g>
                 </g>
-                <text class="cls-10" transform="translate(205.95 693.85)"><tspan class="cls-5"><tspan x="0" y="0">CORNERSTONE</tspan></tspan><tspan class="cls-2"><tspan x="464.29" y="440">FEUD</tspan></tspan></text>
+                <text class="cls-10" transform="translate(205.95 693.85)" fill="#FFE978"><tspan class="cls-5"><tspan x="0" y="0">CORNERSTONE</tspan></tspan><tspan class="cls-2"><tspan x="464.29" y="440">FEUD</tspan></tspan></text>
             </g>
             </g>
         </g>
