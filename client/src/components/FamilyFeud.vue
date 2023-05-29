@@ -9,9 +9,10 @@ import Strikes from './Strikes.vue';
 import revealAnswerSoundUrl from '../assets/sounds/AnswerReveal.mp3';
 import applauseUrl from '../assets/sounds/Applause.mp3';
 import strikeSoundUrl from '../assets/sounds/Strike.mp3';
-import videoUrl from '../assets/videos/1.mp4';
 import LightOval from './LightOval.vue';
 import Logo from './Logo.vue';
+import mainVideoUrl from '../assets/videos/1.mp4';
+import teamVideoUrl from '../assets/videos/6.mp4';
 
 const questionsAndAnswers = reactive(questionsAndAnswersData);
 const teams = reactive(teamsData);
@@ -161,11 +162,11 @@ onMounted(() => {
           startGame();
         }">
           <button
-            class="text-3xl px-10 py-3 max-w-fit mx-auto bg-[#21409a] text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase"
+            class="text-3xl px-10 py-3 max-w-fit mx-auto transition-colors bg-[#007ee8]/30 hover:bg-[#007ee8]/100 backdrop-blur-lg border-8 border-[#5e9fff] text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase"
             type="submit"
             :disabled="teams[0].name === '' || teams[1].name === ''"
           >
-              Start Game
+              <div class="">Start Game</div>
           </button>
         </form>
       </div>
@@ -198,8 +199,46 @@ onMounted(() => {
       </transition>
     </div>
 
-    <figure class="fixed inset-0 z-0 object-cover object-center bg-orange-300">
-        <video :src="videoUrl" loop="true" class="object-cover w-full h-full" autoplay muted style="mix-blend-mode: luminosity;"></video>
+    <figure
+      class="fixed inset-0 z-0 object-cover object-center bg-orange-300"
+      v-show="!gameStarted || gameEnded"
+    >
+        <video
+          :src="mainVideoUrl"
+          loop="true"
+          class="object-cover w-full h-full"
+          autoplay
+          muted
+          style="mix-blend-mode: luminosity;"
+        ></video>
+    </figure>
+
+    <figure
+      class="fixed inset-0 z-0 object-cover object-center bg-orange-300"
+      v-show="gameStarted && activeTeamIndex === 0 && !gameEnded"
+    >
+        <video
+          :src="teamVideoUrl"
+          loop="true"
+          class="object-cover object-top w-full h-full rotate-180"
+          autoplay
+          muted
+          style="mix-blend-mode: luminosity;"
+        ></video>
+    </figure>
+
+    <figure
+      class="fixed inset-0 z-0 object-cover object-center bg-orange-300"
+      v-show="gameStarted && activeTeamIndex === 1 && !gameEnded"
+    >
+        <video
+          :src="teamVideoUrl"
+          loop="true"
+          class="object-cover w-full h-full"
+          autoplay
+          muted
+          style="mix-blend-mode: luminosity;"
+        ></video>
     </figure>
   </div>
 </template>
