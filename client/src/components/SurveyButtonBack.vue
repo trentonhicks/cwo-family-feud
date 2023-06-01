@@ -25,7 +25,7 @@
                     x="5%"
                     y="50%"
                     alignment-baseline="middle"
-                    font-size="100"
+                    font-size="80"
                     font-weight="bold"
                     fill="white"><slot /></text>
             </g>

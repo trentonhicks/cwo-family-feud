@@ -15,6 +15,7 @@ import mainVideoUrl from '../assets/videos/1.mp4';
 import teamVideoUrl from '../assets/videos/6.mp4';
 
 const questionsAndAnswers = reactive(questionsAndAnswersData);
+const roundIndex = ref(0);
 const teams = reactive(teamsData);
 const teamStrikes = reactive([0, 0]);
 const activeTeamIndex = ref(0);
@@ -48,13 +49,14 @@ function resetGame() {
   gameWinner.value = null;
   activeTeamIndex.value = 0;
   activeQuestionIndex.value = 0;
+  roundIndex.value = 0;
 
   teams.forEach((team, index) => {
     team.score = 0;
     teamStrikes[index] = 0;
   });
 
-  questionsAndAnswers.forEach((questionAndAnswers) => {
+  questionsAndAnswers[roundIndex.value].forEach((questionAndAnswers) => {
     questionAndAnswers.answers.forEach(answer => {
       answer.revealed = false;
     });
@@ -69,14 +71,14 @@ function revealAnswer(answerIndex: number) {
   if (teamStrikes[activeTeamIndex.value] === 3)
     return;
 
-  if (questionsAndAnswers[activeQuestionIndex.value].answers[answerIndex] === undefined)
+  if (questionsAndAnswers[roundIndex.value][activeQuestionIndex.value].answers[answerIndex] === undefined)
     return;
 
-  if (questionsAndAnswers[activeQuestionIndex.value].answers[answerIndex].revealed)
+  if (questionsAndAnswers[roundIndex.value][activeQuestionIndex.value].answers[answerIndex].revealed)
     return;
 
-  teams[activeTeamIndex.value].score++;
-  questionsAndAnswers[activeQuestionIndex.value].answers[answerIndex].revealed = true;
+  teams[activeTeamIndex.value].score += questionsAndAnswers[roundIndex.value][activeQuestionIndex.value].answers[answerIndex].points;
+  questionsAndAnswers[roundIndex.value][activeQuestionIndex.value].answers[answerIndex].revealed = true;
 
   const revealAnswerSound = new Audio(revealAnswerSoundUrl);
   revealAnswerSound.play();
@@ -106,7 +108,7 @@ function addStrike() {
 }
 
 function nextQuestion() {
-  if (activeQuestionIndex.value < questionsAndAnswers.length - 1) {
+  if (activeQuestionIndex.value < questionsAndAnswers[roundIndex.value].length - 1) {
     activeQuestionIndex.value++;
     resetStrikes();
   }
@@ -245,12 +247,31 @@ onMounted(() => {
         class="flex items-center justify-center h-screen relative z-10 text-white"
         data-screen="startGame"
       >
-        <div class="w-full px-[25%] font-feud">
+        <div class="w-full px-[27%] font-feud">
           <Logo class="mx-auto" />
           <form class="flex flex-col gap-5" @submit="(event) => {
             event.preventDefault();
             startGame();
           }">
+            <div>
+              <label for="team-1" class="block max-w-fit font-medium leading-6 text-white text-3xl bg-black/30 backdrop-blur-lg py-3 px-5 rounded-md"
+              >
+                Round
+              </label>
+              <div class="mt-2">
+                <select
+                  type="text"
+                  name="team-1"
+                  id="team-1"
+                  class="block w-full text-xl rounded-md border-0 px-5 py-3 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                  v-model="roundIndex"
+                >
+                  <option :value="0">Round 1</option>
+                  <option :value="1">Round 2</option>
+                  <option :value="2">Round 3</option>
+                </select>
+              </div>
+            </div>
             <div>
               <label for="team-1" class="block max-w-fit font-medium leading-6 text-white text-3xl bg-black/30 backdrop-blur-lg py-3 px-5 rounded-md"
               >
@@ -261,7 +282,7 @@ onMounted(() => {
                   type="text"
                   name="team-1"
                   id="team-1"
-                  class="block w-full text-3xl rounded-md border-0 px-5 py-3 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                  class="block w-full text-xl rounded-md border-0 px-5 py-3 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                   :value="teams[0].name"
                   @input="(event) => setTeam(0, (event.target as HTMLInputElement).value)"
                 />
@@ -274,7 +295,7 @@ onMounted(() => {
                   type="text"
                   name="team-2"
                   id="team-2"
-                  class="text-gray-600 block w-full text-3xl rounded-md border-0 px-5 py-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                  class="text-gray-600 block w-full text-xl rounded-md border-0 px-5 py-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                   :value="teams[1].name"
                   @input="(event) => setTeam(1, (event.target as HTMLInputElement).value)"
                 />
@@ -285,7 +306,7 @@ onMounted(() => {
               type="submit"
               :disabled="teams[0].name === '' || teams[1].name === ''"
             >
-                <div class="">Start Game</div>
+                <div>Start Game</div>
             </button>
           </form>
         </div>
@@ -305,7 +326,7 @@ onMounted(() => {
           />
 
           <SurveyBoard
-            :answers="questionsAndAnswers[activeQuestionIndex].answers"
+            :answers="questionsAndAnswers[roundIndex][activeQuestionIndex].answers"
             @reveal="revealAnswer"
           />
         </LightOval>
