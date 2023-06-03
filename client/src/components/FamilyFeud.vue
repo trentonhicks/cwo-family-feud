@@ -26,10 +26,6 @@ const applauseActive = ref(false);
 const gameEnded = ref(false);
 const gameWinner = ref<number | null>(null);
 
-function setTeam(teamIndex: number, teamName: string) {
-  teams[teamIndex].name = teamName;
-}
-
 function startGame() {
   gameStarted.value = true;
 }
@@ -297,7 +293,7 @@ onMounted(() => {
       >
         <div class="w-full px-[27%] font-feud">
           <Logo class="mx-auto" />
-          <form class="flex flex-col gap-10" @submit="(event) => {
+          <form class="flex flex-col gap-8" @submit="(event) => {
             event.preventDefault();
             startGame();
           }">
@@ -321,7 +317,7 @@ onMounted(() => {
               </div>
             </div>
             <button
-              class="scale-150 text-3xl px-10 py-3 max-w-fit mx-auto transition-colors bg-[#007ee8]/30 hover:bg-[#007ee8]/100 backdrop-blur-lg border-8 border-[#5e9fff] text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase"
+              class="scale-150 origin-top text-3xl px-10 py-3 max-w-fit mx-auto transition-colors bg-[#007ee8]/30 hover:bg-[#007ee8]/100 backdrop-blur-lg border-8 border-[#5e9fff] text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase"
               type="submit"
               :disabled="teams[0].name === '' || teams[1].name === ''"
             >

@@ -1,16 +1,5 @@
 import QuestionAndAnswers from "../types/QuestionAndAnswers";
 
-/*
-Round 1 teams 
-Bruns vs Jessens
-
-Round 2 teams 
-Rosners vs Messerschmitts
-
-Round 3 teams 
-Gordons vs Loomis
-*/
-
 const questionsAndAnswers : QuestionAndAnswers[][] = [
     [
         {
@@ -54,6 +43,73 @@ const questionsAndAnswers : QuestionAndAnswers[][] = [
             ]
         },
         {
+            question: { text: "Name Something You Might Be Glad Only Comes Once a Year." },
+            answers: [
+                {
+                    text: 'Christmas',
+                    points: 40,
+                    revealed: false,
+                },
+                {
+                    text: 'Birthdays',
+                    points: 35,
+                    revealed: false,
+                },
+                {
+                    text: 'Tax Season',
+                    points: 30,
+                    revealed: false,
+                },
+                {
+                    text: 'Anniversary',
+                    points: 25,
+                    revealed: false,
+                },
+            ]
+        },
+        {
+            question: { text: "What modern food would be at the last supper if it happened today." },
+            answers: [
+                {
+                    text: 'Cheesy/mashed potatoes',
+                    points: 40,
+                    revealed: false,
+                },
+                {
+                    text: 'Fried Chicken',
+                    points: 35,
+                    revealed: false,
+                },
+                {
+                    text: 'Chick-fil-A',
+                    points: 30,
+                    revealed: false,
+                },
+                {
+                    text: 'Jello',
+                    points: 25,
+                    revealed: false,
+                },
+                {
+                    text: 'Chilli & cinnamon rolls',
+                    points: 20,
+                    revealed: false,
+                },
+                {
+                    text: 'Potato salad',
+                    points: 15,
+                    revealed: false,
+                },
+                {
+                    text: 'Baked beans',
+                    points: 10,
+                    revealed: false,
+                },
+            ]
+        },
+    ],
+    [
+        {
             question: { text: "Name a place you'd hate to spend even one night." },
             answers: [
                 {
@@ -89,40 +145,70 @@ const questionsAndAnswers : QuestionAndAnswers[][] = [
             ]
         },
         {
-            question: { text: "Who in the bible would make the best member of the fellowship of the ring." },
+            question: { text: "Name something people tend to fall out of." },
             answers: [
                 {
-                    text: 'Jesus',
+                    text: 'Tree',
                     points: 40,
                     revealed: false,
                 },
                 {
-                    text: 'Samson',
+                    text: 'Love',
                     points: 35,
                     revealed: false,
                 },
                 {
-                    text: 'David',
+                    text: 'Bed',
                     points: 30,
                     revealed: false,
                 },
                 {
-                    text: 'Paul',
+                    text: 'Chair',
                     points: 25,
                     revealed: false,
                 },
                 {
-                    text: 'Elijah',
+                    text: 'Car',
+                    points: 20,
+                    revealed: false,
+                },
+            ]
+        },
+        {
+            question: { text: "Name something in the Bible you shouldn't touch." },
+            answers: [
+                {
+                    text: "The apple",
+                    points: 40,
+                    revealed: false,
+                },
+                {
+                    text: "The ark of the covenant",
+                    points: 35,
+                    revealed: false,
+                },
+                {
+                    text: "The Lord's anointed",
+                    points: 30,
+                    revealed: false,
+                },
+                {
+                    text: "Another man's wife",
+                    points: 25,
+                    revealed: false,
+                },
+                {
+                    text: "Dead animal",
                     points: 20,
                     revealed: false,
                 },
                 {
-                    text: 'Zacchaeus',
+                    text: "Unclean/leper",
                     points: 15,
                     revealed: false,
                 },
             ]
-        }
+        },
     ],
     [
         {
@@ -171,78 +257,6 @@ const questionsAndAnswers : QuestionAndAnswers[][] = [
             ]
         },
         {
-            question: { text: "Name something people tend to fall out of." },
-            answers: [
-                {
-                    text: 'Tree',
-                    points: 40,
-                    revealed: false,
-                },
-                {
-                    text: 'Love',
-                    points: 35,
-                    revealed: false,
-                },
-                {
-                    text: 'Bed',
-                    points: 30,
-                    revealed: false,
-                },
-                {
-                    text: 'Chair',
-                    points: 25,
-                    revealed: false,
-                },
-                {
-                    text: 'Car',
-                    points: 20,
-                    revealed: false,
-                },
-            ]
-        },
-        {
-            question: { text: "What modern food would be at the last supper if it happened today." },
-            answers: [
-                {
-                    text: 'Cheesy/mashed potatoes',
-                    points: 40,
-                    revealed: false,
-                },
-                {
-                    text: 'Fried Chicken',
-                    points: 35,
-                    revealed: false,
-                },
-                {
-                    text: 'Chick-fil-A',
-                    points: 30,
-                    revealed: false,
-                },
-                {
-                    text: 'Jello',
-                    points: 25,
-                    revealed: false,
-                },
-                {
-                    text: 'Chilli & cinnamon rolls',
-                    points: 20,
-                    revealed: false,
-                },
-                {
-                    text: 'Potato salad',
-                    points: 15,
-                    revealed: false,
-                },
-                {
-                    text: 'Baked beans',
-                    points: 10,
-                    revealed: false,
-                },
-            ]
-        }
-    ],
-    [
-        {
             question: { text: "When You Hear a Noise Coming From Your Basement, What Do You Pray That it ISN'T?" },
             answers: [
                 {
@@ -268,65 +282,40 @@ const questionsAndAnswers : QuestionAndAnswers[][] = [
             ]
         },
         {
-            question: { text: "Name Something You Might Be Glad Only Comes Once a Year." },
+            question: { text: "Who in the bible would make the best member of the fellowship of the ring." },
             answers: [
                 {
-                    text: 'Christmas',
+                    text: 'Jesus',
                     points: 40,
                     revealed: false,
                 },
                 {
-                    text: 'Birthdays',
+                    text: 'Samson',
                     points: 35,
                     revealed: false,
                 },
                 {
-                    text: 'Tax Season',
+                    text: 'David',
                     points: 30,
                     revealed: false,
                 },
                 {
-                    text: 'Anniversary',
-                    points: 25,
-                    revealed: false,
-                },
-            ]
-        },
-        {
-            question: { text: "Name something in the Bible you shouldn't touch." },
-            answers: [
-                {
-                    text: "The apple",
-                    points: 40,
-                    revealed: false,
-                },
-                {
-                    text: "The ark of the covenant",
-                    points: 35,
-                    revealed: false,
-                },
-                {
-                    text: "The Lord's anointed",
-                    points: 30,
-                    revealed: false,
-                },
-                {
-                    text: "Another man's wife",
+                    text: 'Paul',
                     points: 25,
                     revealed: false,
                 },
                 {
-                    text: "Dead animal",
+                    text: 'Elijah',
                     points: 20,
                     revealed: false,
                 },
                 {
-                    text: "Unclean/leper",
+                    text: 'Zacchaeus',
                     points: 15,
                     revealed: false,
                 },
             ]
-        }
+        },
     ]
 ]
 
