@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { gsap } from 'gsap';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import questionsAndAnswersData from '../data/questionsAndAnswersData';
 import teamsData from '../data/teamsData';
 import Teams from './Teams.vue';
@@ -200,6 +200,23 @@ function animateScreenOut(element: HTMLElement, done: any) {
   }
 }
 
+watch(roundIndex, () => {
+  switch (roundIndex.value) {
+    case 0:
+      teams[0].name = "Bruns'";
+      teams[1].name = "Jessens";
+      break;
+    case 1:
+      teams[0].name = 'Roseners';
+      teams[1].name = 'Messerschmidts';
+      break;
+    case 2:
+      teams[0].name = "Gordons";
+      teams[1].name = "Loomis’";
+      break;
+  }
+}, { immediate: true, });
+
 onMounted(() => {
   document.addEventListener('keyup', (event) => {
     if (!gameStarted.value || gameEnded.value)
@@ -275,26 +292,26 @@ onMounted(() => {
       <!-- Start Game -->
       <div
         v-if="!gameStarted"
-        class="flex items-center justify-center h-screen relative z-10 text-white"
+        class="flex items-center justify-center h-screen relative z-10 text-white scale-125"
         data-screen="startGame"
       >
         <div class="w-full px-[27%] font-feud">
           <Logo class="mx-auto" />
-          <form class="flex flex-col gap-5" @submit="(event) => {
+          <form class="flex flex-col gap-10" @submit="(event) => {
             event.preventDefault();
             startGame();
           }">
             <div>
-              <label for="team-1" class="block max-w-fit font-medium leading-6 text-white text-3xl bg-black/30 backdrop-blur-lg py-3 px-5 rounded-md"
+              <label for="team-1" class="sr-only max-w-fit font-medium leading-6 text-white text-3xl bg-black/30 backdrop-blur-lg py-3 px-5 rounded-md"
               >
                 Round
               </label>
               <div class="mt-2">
                 <select
                   type="text"
-                  name="team-1"
-                  id="team-1"
-                  class="block w-full text-xl rounded-md border-0 px-5 py-3 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                  name="round"
+                  id="round"
+                  class="block w-full text-4xl rounded-md border-0 px-5 py-3 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                   v-model="roundIndex"
                 >
                   <option :value="0">Round 1</option>
@@ -303,37 +320,8 @@ onMounted(() => {
                 </select>
               </div>
             </div>
-            <div>
-              <label for="team-1" class="block max-w-fit font-medium leading-6 text-white text-3xl bg-black/30 backdrop-blur-lg py-3 px-5 rounded-md"
-              >
-                Team 1
-              </label>
-              <div class="mt-2">
-                <input
-                  type="text"
-                  name="team-1"
-                  id="team-1"
-                  class="block w-full text-xl rounded-md border-0 px-5 py-3 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                  :value="teams[0].name"
-                  @input="(event) => setTeam(0, (event.target as HTMLInputElement).value)"
-                />
-              </div>
-            </div>
-            <div>
-              <label for="team-2" class="block max-w-fit bg-black/30 backdrop-blur-lg px-5 py-3 rounded-md text-white font-medium leading-6 text-3xl">Team 2</label>
-              <div class="mt-2">
-                <input
-                  type="text"
-                  name="team-2"
-                  id="team-2"
-                  class="text-gray-600 block w-full text-xl rounded-md border-0 px-5 py-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                  :value="teams[1].name"
-                  @input="(event) => setTeam(1, (event.target as HTMLInputElement).value)"
-                />
-              </div>
-            </div>
             <button
-              class="text-3xl px-10 py-3 max-w-fit mx-auto transition-colors bg-[#007ee8]/30 hover:bg-[#007ee8]/100 backdrop-blur-lg border-8 border-[#5e9fff] text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase"
+              class="scale-150 text-3xl px-10 py-3 max-w-fit mx-auto transition-colors bg-[#007ee8]/30 hover:bg-[#007ee8]/100 backdrop-blur-lg border-8 border-[#5e9fff] text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase"
               type="submit"
               :disabled="teams[0].name === '' || teams[1].name === ''"
             >
@@ -373,11 +361,13 @@ onMounted(() => {
         class="flex flex-col items-center justify-center gap-y-10 h-screen relative z-10"
         data-screen="endedGame"
       >
-        <div class="text-6xl font-bold text-white font-feud bg-black/30 backdrop-blur-lg px-20 py-10 border-2 shadow-inner border-[#FFE978] rounded-lg">
-          <h2 v-if="gameWinner === null">{{ teams[0].name }} and {{ teams[1].name }} tied!</h2>
-          <h2 v-else>{{ teams[gameWinner].name }} won!</h2>
+        <div class="scale-150 flex flex-col gap-y-10">
+          <div class="text-6xl font-bold text-white font-feud bg-black/30 backdrop-blur-lg px-20 py-10 border-2 shadow-inner border-[#FFE978] rounded-lg">
+           <h2 v-if="gameWinner === null">{{ teams[0].name }} and {{ teams[1].name }} tied!</h2>
+            <h2 v-else>{{ teams[gameWinner].name }} won!</h2>
+          </div>
+          <button class="scale-125 text-3xl px-10 py-3 max-w-fit mx-auto transition-colors bg-[#007ee8]/30 hover:bg-[#007ee8]/100 backdrop-blur-lg border-8 border-[#5e9fff] text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase" @click="resetGame">Play Again</button>
         </div>
-        <button class="text-3xl px-10 py-3 max-w-fit mx-auto transition-colors bg-[#007ee8]/30 hover:bg-[#007ee8]/100 backdrop-blur-lg border-8 border-[#5e9fff] text-white font-bold rounded-lg disabled:bg-gray-500 font-feud uppercase" @click="resetGame">Play Again</button>
       </div>
     </transition>
 
