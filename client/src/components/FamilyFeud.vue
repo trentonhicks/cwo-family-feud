@@ -50,6 +50,8 @@ function resetGame() {
   activeTeamIndex.value = 0;
   activeQuestionIndex.value = 0;
   roundIndex.value = 0;
+  teams[0].currentRoundScore = 0;
+  teams[1].currentRoundScore = 0;
 
   teams.forEach((team, index) => {
     team.score = 0;
@@ -67,7 +69,15 @@ function selectTeam(teamIndex: number) {
   activeTeamIndex.value = teamIndex;
 }
 
+function revealAllAnswers() {
+  questionsAndAnswers[roundIndex.value][activeQuestionIndex.value].answers.forEach(answer => answer.revealed = true);
+}
+
 function revealAnswer(answerIndex: number) {
+  const otherTeamIndex = activeTeamIndex.value === 0 ? 1 : 0;
+  const otherTeamStrikeCount = teamStrikes[otherTeamIndex];
+  const pointsForAnswer = questionsAndAnswers[roundIndex.value][activeQuestionIndex.value].answers[answerIndex].points;
+
   if (teamStrikes[activeTeamIndex.value] === 3)
     return;
 
@@ -77,7 +87,18 @@ function revealAnswer(answerIndex: number) {
   if (questionsAndAnswers[roundIndex.value][activeQuestionIndex.value].answers[answerIndex].revealed)
     return;
 
-  teams[activeTeamIndex.value].score += questionsAndAnswers[roundIndex.value][activeQuestionIndex.value].answers[answerIndex].points;
+  if (otherTeamStrikeCount === 3) {
+    teams[activeTeamIndex.value].score += teams[otherTeamIndex].currentRoundScore + pointsForAnswer;
+    teams[activeTeamIndex.value].currentRoundScore += teams[otherTeamIndex].currentRoundScore + pointsForAnswer;
+    teams[otherTeamIndex].score -= teams[otherTeamIndex].currentRoundScore;
+    teams[otherTeamIndex].currentRoundScore -= teams[otherTeamIndex].currentRoundScore;
+  }
+
+  else {
+    teams[activeTeamIndex.value].score += pointsForAnswer;
+    teams[activeTeamIndex.value].currentRoundScore += pointsForAnswer;
+  }
+
   questionsAndAnswers[roundIndex.value][activeQuestionIndex.value].answers[answerIndex].revealed = true;
 
   const revealAnswerSound = new Audio(revealAnswerSoundUrl);
@@ -104,6 +125,10 @@ function addStrike() {
     
     const strikeSound = new Audio(strikeSoundUrl);
     strikeSound.play();
+
+    if (teamStrikes[activeTeamIndex.value] === 3) {
+      selectTeam(activeTeamIndex.value === 0 ? 1 : 0);
+    }
   }
 }
 
@@ -111,6 +136,8 @@ function nextQuestion() {
   if (activeQuestionIndex.value < questionsAndAnswers[roundIndex.value].length - 1) {
     activeQuestionIndex.value++;
     resetStrikes();
+    teams[0].currentRoundScore = 0;
+    teams[1].currentRoundScore = 0;
   }
 }
 
@@ -189,6 +216,10 @@ onMounted(() => {
 
       case 'KeyQ':
         endGame();
+        break;
+
+      case "KeyA":
+        revealAllAnswers();
         break;
 
       case 'Digit9':
